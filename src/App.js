@@ -1,26 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import './App.css';
 import Header from './components/Header/Header';
 import ContactInfo from './components/ContactInfo/ContactInfo';
 import Contacts from './components/Contacts/Contacts';
-import { getUsers } from './redux/rootReducer';
-import { Route } from 'react-router-dom';
-// import { getUsers } from './api/api';
+import { getUsers, setUsers } from './redux/rootReducer';
+import { Route } from 'react-router-dom'; 
 import { connect } from 'react-redux'; 
 
-const App = React.memo((props) => {
-    // let usersData = JSON.parse(localStorage.getItem('users'))
-    // let [users, setUsers] = useState([])
-
+const App = React.memo(({ setUsers, getUsers, users }) => { 
     useEffect(() => {
-        props.getUsers();
-    }, [props.users[0]]) 
+        let contacts = JSON.parse(localStorage.getItem('contacts'));
+        if(contacts){
+            setUsers(contacts)
+        } else{
+            getUsers();
+        } 
+    }, [setUsers, getUsers]) 
     return (
         <div className="App">
             <Header />
             <div className="main">
                 <div className="wrapper">
-                    <Route exact path='/' render={ () => <Contacts users={ props.users }/> } />
+                    <Route exact path='/' render={ () => <Contacts users={ users }/> } />
                     <Route path='/contact/:userId' render={ () => <ContactInfo /> } /> 
                 </div>
             </div>
@@ -34,4 +35,4 @@ const mstp = (state) => ({
 
 
 
-export default connect(mstp, { getUsers })(App);
+export default connect(mstp, { getUsers, setUsers })(App);
