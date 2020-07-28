@@ -1,0 +1,31 @@
+{
+  "files": {
+    "main.css": "/NeobisContacts/static/css/main.5ecc9ce3.chunk.css",
+    "main.js": "/NeobisContacts/static/js/main.0517dbd0.chunk.js",
+    "main.js.map": "/NeobisContacts/static/js/main.0517dbd0.chunk.js.map",
+    "runtime-main.js": "/NeobisContacts/static/js/runtime-main.2faa93ee.js",
+    "runtime-main.js.map": "/NeobisContacts/static/js/runtime-main.2faa93ee.js.map",
+    "static/js/2.f55f2326.chunk.js": "/NeobisContacts/static/js/2.f55f2326.chunk.js",
+    "static/js/2.f55f2326.chunk.js.map": "/NeobisContacts/static/js/2.f55f2326.chunk.js.map",
+    "index.html": "/NeobisContacts/index.html",
+    "precache-manifest.1bbe36afe922b9efe80a49322c79a05e.js": "/NeobisContacts/precache-manifest.1bbe36afe922b9efe80a49322c79a05e.js",
+    "service-worker.js": "/NeobisContacts/service-worker.js",
+    "static/css/main.5ecc9ce3.chunk.css.map": "/NeobisContacts/static/css/main.5ecc9ce3.chunk.css.map",
+    "static/js/2.f55f2326.chunk.js.LICENSE.txt": "/NeobisContacts/static/js/2.f55f2326.chunk.js.LICENSE.txt",
+    "static/media/email.svg": "/NeobisContacts/static/media/email.295e814c.svg",
+    "static/media/favorite.svg": "/NeobisContacts/static/media/favorite.edffeac8.svg",
+    "static/media/internet.svg": "/NeobisContacts/static/media/internet.99f89efb.svg",
+    "static/media/location.svg": "/NeobisContacts/static/media/location.06a791e2.svg",
+    "static/media/logo.svg": "/NeobisContacts/static/media/logo.b6f07fb6.svg",
+    "static/media/nonfavorite.svg": "/NeobisContacts/static/media/nonfavorite.21f320e7.svg",
+    "static/media/smartphone.svg": "/NeobisContacts/static/media/smartphone.30eebe89.svg",
+    "static/media/sortAZ.svg": "/NeobisContacts/static/media/sortAZ.c25fea94.svg",
+    "static/media/sortZA.svg": "/NeobisContacts/static/media/sortZA.7126b71e.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.2faa93ee.js",
+    "static/js/2.f55f2326.chunk.js",
+    "static/css/main.5ecc9ce3.chunk.css",
+    "static/js/main.0517dbd0.chunk.js"
+  ]
+}
