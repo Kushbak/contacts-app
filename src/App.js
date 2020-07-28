@@ -7,14 +7,11 @@ import { getUsers, setUsers } from './redux/rootReducer';
 import { Route } from 'react-router-dom'; 
 import { connect } from 'react-redux'; 
 
-const App = React.memo(({ setUsers, getUsers, users }) => { 
+const App = React.memo(({ setUsers, getUsers, users }) => {   
+    localStorage.getItem('favorites') == null && localStorage.setItem('favorites', JSON.stringify([]))
     useEffect(() => {
         let contacts = JSON.parse(localStorage.getItem('contacts'));
-        if(contacts){
-            setUsers(contacts)
-        } else{
-            getUsers();
-        } 
+        contacts ? setUsers(contacts) :getUsers()
     }, [setUsers, getUsers]) 
     return (
         <div className="App">
@@ -30,7 +27,8 @@ const App = React.memo(({ setUsers, getUsers, users }) => {
 })
 
 const mstp = (state) => ({
-    users: state.usersData.users
+    users: state.usersData.users,
+    favorites: state.usersData.favorites
 })
 
 
