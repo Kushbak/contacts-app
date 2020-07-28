@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useReducer } from 'react';
 import { NavLink } from 'react-router-dom';
 import { connect } from 'react-redux';
 import styles from './Contacts.module.css';
@@ -8,23 +8,24 @@ import emailIcon from '../../assets/images/email.svg';
 import internetIcon from '../../assets/images/internet.svg';
 import locationIcon from '../../assets/images/location.svg';
 import smartphoneIcon from '../../assets/images/smartphone.svg';
-import { addToFavorites, removeFavorite, setFavoritesFromLS } from '../../redux/rootReducer';
+import sortIconAZ from '../../assets/images/sortAZ.svg'; 
+import sortIconZA from '../../assets/images/sortZA.svg'; 
+import { addToFavorites, removeFavorite, setFavoritesFromLS, setUsers } from '../../redux/rootReducer';
 
 
-const Contacts = ({ users, favorites, setFavoritesFromLS, addToFavorites, removeFavorite  }) => {
+const Contacts = ({ users, favorites, setFavoritesFromLS, addToFavorites, removeFavorite, setUsers }) => {
     const [searchedUsers, setSearchedUsers] = useState();
-    const [isFavoritesFilter, setFavoritesFilter] = useState(false);  
+    const [isFavoritesFilter, setFavoritesFilter] = useState(false);   
 
     const preventFavorites = useRef();
     preventFavorites.current = favorites;
-    
+    const [ignored, forceUpdate] = useReducer(x => x + 1, 0);
+ 
     useEffect(() => { 
         if(!favorites.length && JSON.parse(localStorage.getItem('favorites')).length){
             setFavoritesFromLS(JSON.parse(localStorage.getItem('favorites')))
         } 
-    }, [])
-
- 
+    }, [favorites, setFavoritesFromLS])
     
     const setFavorites = async (user) => {   
         if (!favorites.some(item => item.id === user.id)) {
@@ -37,33 +38,47 @@ const Contacts = ({ users, favorites, setFavoritesFromLS, addToFavorites, remove
 
     const searchFunc = (e) => {
         setSearchedUsers(users.filter(item => {
-            return item.firstName.toLowerCase().search(e.target.value.toLowerCase()) !== -1
-                || item.lastName.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+            let fullName = item.firstName + ' ' + item.lastName;
+            let fullNameReverse = item.lastName + ' ' + item.firstName;
+            return fullName.toLowerCase().search(e.target.value.toLowerCase()) !== -1
+                || fullNameReverse.toLowerCase().search(e.target.value.toLowerCase()) !== -1
         }))
     }
-
-    const sortFunc = (users, direction) => {  
-        [].slice.call(users).sort((a, b) => {  
-            return a > b ? direction : direction * -1;
-        }); 
+    
+    // let sortedUsers = []
+    const sortFunc = async (direction) => {   
+        let sortedUsers = await users.sort((a, b) => {
+            if(direction){
+                if (a.firstName < b.firstName) return -1;
+                if (b.firstName < a.firstName) return 1;
+            } else{ 
+                if (a.firstName > b.firstName) return -1;
+                if (b.firstName > a.firstName) return 1;
+            } 
+        })
+        setUsers(sortedUsers)
+        forceUpdate();
     }
+
 
     return (
         <div className={ styles.contactsBlock }>
 
             <div className={ styles.actionBars }>
                 <div className={ styles.search }>
-                    <input type="text" className={ styles.searchInput } onChange={(e) => searchFunc(e)} placeholder='type to search...' />
+                    <input type="text" className={ styles.searchInput } onChange={ (e) => searchFunc(e) } placeholder='type to search...' />
                 </div>
                 <div className={ styles.actionButtons}>
-                    <span className= {styles.favoritesFilter } onClick={ () => setFavoritesFilter(!isFavoritesFilter) } ><img src={ isFavoritesFilter ? favIcon : nonfavIcon } alt="Favorites" /></span>
-                    <button onClick={ () => sortFunc(users, 1) } className={ styles.sortBtn } > AZ </button>
-                    <button onClick={ () => sortFunc(users, -1) } className={ styles.sortBtn } > ZA </button>
+                    <span className= { styles.favoritesFilter } onClick={ () => setFavoritesFilter(!isFavoritesFilter) } >
+                        <img src={ isFavoritesFilter ? favIcon : nonfavIcon } alt="Favorites" />
+                    </span>
+                    <span onClick={ () => sortFunc(true) }><img src={ sortIconAZ } alt="az sort"/></span>
+                    <span onClick={ () => sortFunc(false) }><img src={ sortIconZA } alt="za sort"/></span> 
                 </div>
             </div>
 
             <div className={ styles.contacts}>
-                {searchedUsers
+                { searchedUsers
                     ? <UsersMapping users={ searchedUsers } setFavorites={ setFavorites } isFavorites={ isFavoritesFilter } favorites={ favorites } />
                     : <UsersMapping users={ users } setFavorites={ setFavorites } isFavorites={ isFavoritesFilter } favorites={ favorites } />
                 }
@@ -101,7 +116,7 @@ const UsersMapping = ({ users, setFavorites, isFavorites, favorites }) => {
                     { u.email }
                 </p>
                 <div className={ styles.btnBlock }>
-                    <NavLink to={`/contact/${u.id}`} className={ styles.showUser }>Show</NavLink>
+                    <NavLink to={`/contact/${ u.id }`} className={ styles.showUser }>Show</NavLink>
                 </div>
             </div>
         </div>
@@ -114,4 +129,4 @@ const mstp = (state) => ({
     favorites: state.usersData.favorites
 })
 
-export default connect(mstp, { addToFavorites, removeFavorite, setFavoritesFromLS })(Contacts);
+export default connect(mstp, { addToFavorites, removeFavorite, setFavoritesFromLS, setUsers })(Contacts);
