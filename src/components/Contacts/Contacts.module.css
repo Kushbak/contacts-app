@@ -53,6 +53,7 @@
 .actionBars{
     display: flex;
     justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 .search{
@@ -62,4 +63,19 @@
     padding: 10px;
     width: 100%;
 }
- 
+
+.actionButtons{
+    display: flex;  
+    flex-basis: 12%;
+    align-items: center;
+    justify-content: space-around;
+}
+.favoritesFilter{
+    width: 35px;
+}
+.favoritesFilter img{
+    width: 100%;
+}
+.sortBtn{
+    padding: 10px;
+}
