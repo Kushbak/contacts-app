@@ -1,5 +1,5 @@
 import { createStore, combineReducers, applyMiddleware } from "redux"; 
-// import { reducer as formReducer } from "redux-form";
+import { reducer as formReducer } from "redux-form";
 import thunk from "redux-thunk";  
 import { getUsersApi } from '../api/api' 
 
@@ -9,38 +9,67 @@ import { getUsersApi } from '../api/api'
 // REDUCER FOR USERS 
 
 let initialState = {
-    users: []
+    users: [],
+    favorites: []
 };
 
 export const usersReducer = (state = initialState, action) => {
     switch (action.type) {
-        case 'GET_USERS':
+        case 'GET_USERS':  
             return {
                 ...state,
                 users: action.users
             }
-        default:
+        case 'GET_FAVORITES': 
+            return {
+                ...state,
+                favorites: [...state.favorites, action.favorite]
+            }
+        case 'REMOVE_FAVORITE':  
+            return {
+                ...state,
+                favorites: state.favorites.length > 1 ? state.favorites.filter(item => item.id !== action.favorite.id) : []
+            }
+        case 'SET_FAVORITES_FROM_LS': 
+            return {
+                ...state,
+                favorites: [...action.favorites]
+            }
+        // case 'CHANGE_CONTACT_DETAILS': 
+        //     return {
+        //         ...state,
+        //         users: [state.find(item => item.id === action.user.id)]
+        //     }
+        default: 
             return state;
     }
 }
 
 //  ACTIONS FOR USERS 
 
-export const getUsersSuccess = (users) => ({ type: 'GET_USERS', users });
+export const setUsers = (users) => ({ type: 'GET_USERS', users });
+export const setFavorites = (favorite) => ({ type: 'GET_FAVORITES', favorite })
+export const removeFavorite = (favorite) => ({ type: 'REMOVE_FAVORITE', favorite })
+export const setFavoritesFromLS = (favorites) => ({ type: 'SET_FAVORITES_FROM_LS', favorites })
+// export const changeContactDetails = (user) => ({ type: 'CHANGE_CONTACT_DETAILS', user })
 
 export const getUsers = () => (dispatch) => {
     getUsersApi()
         .then(res => { 
-            dispatch(getUsersSuccess(res.data.data)); 
+            dispatch(setUsers(res.data.data)); 
+            localStorage.setItem('contacts', JSON.stringify(res.data.data))
     })    
 };
 
-
+export const addToFavorites = (favorite) => (dispatch) => {
+    dispatch(setFavorites(favorite));  
+}; 
+ 
 
 
 let reducers = combineReducers({ 
     usersData: usersReducer,  
-    // form: formReducer 
+    form: formReducer 
 });
 let store = createStore(reducers, applyMiddleware(thunk));
 window.store = store;
