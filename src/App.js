@@ -9,10 +9,12 @@ import { connect } from 'react-redux';
 
 const App = React.memo(({ setUsers, getUsers, users }) => {   
     localStorage.getItem('favorites') == null && localStorage.setItem('favorites', JSON.stringify([]))
+
     useEffect(() => {
         let contacts = JSON.parse(localStorage.getItem('contacts'));
-        contacts ? setUsers(contacts) :getUsers()
+        contacts ? setUsers(contacts) : getUsers()
     }, [setUsers, getUsers]) 
+
     return (
         <div className="App">
             <Header />
@@ -30,7 +32,5 @@ const mstp = (state) => ({
     users: state.usersData.users,
     favorites: state.usersData.favorites
 })
-
-
 
 export default connect(mstp, { getUsers, setUsers })(App);
